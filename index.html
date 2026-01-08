@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prathama RK Movie Exhibitors - Movie Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .poster {
+            width: 100%;
+            max-width: 940px;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            object-fit: contain;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .number-input {
+            width: 80px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .modal-buttons button {
+            width: 45%;
+        }
+        .bank-details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .bank-details p {
+            margin: 5px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        input.invalid {
+            border-color: #dc3545;
+        }
+        .phone-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .country-code {
+            width: 80px !important;
+        }
+        .phone-number {
+            flex: 1;
+        }
+        .payment-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .payment-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .ticket-price-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .total-price {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+            margin-top: 10px;
+        }
+        .checkbox-label {
+            font-weight: normal;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .consent-box {
+          background: #f9f9ff;
+          border: 1px solid #ddd;
+          border-radius: 12px;
+          padding: 16px;
+          margin-bottom: 12px;
+          font-size: 14px;
+          line-height: 1.5;
+          color: #444;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .consent-title {
+          font-weight: 600;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+        }
+        
+        .consent-icon {
+          font-size: 18px;
+          margin-right: 6px;
+          color: #4a4a9f;
+        }
+        
+        .combo-info {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .combo-info h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+        
+        .combo-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .combo-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ffeaa7;
+        }
+        
+        .combo-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .show-type-selector {
+            margin-bottom: 20px;
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .radio-option:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .radio-option input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .radio-option input[type="radio"]:checked + label {
+            font-weight: bold;
+        }
+        
+        .radio-option.selected {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <h2 id="paymentModalTitle">Payment Confirmation</h2>
+            <div id="paymentModalContent">
+                <!-- Content will be dynamically inserted -->
+            </div>
+            <div class="modal-buttons">
+                <button onclick="cancelPayment()" style="background-color: #6c757d;">Cancel</button>
+                <button onclick="proceedWithPayment()" style="background-color: #0070ba;">Proceed</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Prathama RK Movie Exhibitors</h1>
+           <!-- <h2>Movie Booking</h2>--> 
+        </div>
+        
+        <img src="https://raw.githubusercontent.com/Ksdheeraj9/SD-Movie-Exhibitors/refs/heads/main/poster.jpeg" alt="Movie Poster" class="poster">
+        
+        <form id="bookingForm" onsubmit="return handleSubmit(event)">
+            <!-- Booking Type Selection -->
+            <div class="form-group show-type-selector">
+                <label>Booking Type *</label>
+                <div class="radio-group">
+                    <div class="radio-option" onclick="selectBookingType('single')">
+                        <input type="radio" id="single" name="bookingType" value="single" checked onchange="updateBookingType()">
+                        <label for="single">Single Movie Ticket</label>
+                    </div>
+                    <div class="radio-option" onclick="selectBookingType('combo')">
+                        <input type="radio" id="combo" name="bookingType" value="combo" onchange="updateBookingType()">
+                        <label for="combo">Combo Offer (2 Movies)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Single Movie Selection -->
+            <div id="singleMovieSection">
+                <div class="form-group">
+                    <label for="date">Select Date *</label>
+                    <select id="date" required>
+                        <option value="">Choose a date</option>
+                    </select>
+                </div>
+                            
+                <div class="form-group">
+                    <label for="show">Select Show *</label>
+                    <select id="show" required>
+                        <option value="">Choose a show</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tickets">Number of Tickets *</label>
+                    <input type="number" id="tickets" required min="1" max="10" value="1" class="number-input" onchange="updateTotalPrice()">
+                    <div class="ticket-price-info" id="pricePerTicket">
+                        Price per ticket: €0.00
+                    </div>
+                    <div class="total-price" id="totalPrice">
+                        Total: €0.00
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Combo Selection -->
+            <div id="comboSection" style="display: none;">
+                <div class="form-group">
+                    <label for="comboSelect">Select Combo Offer *</label>
+                    <select id="comboSelect">
+                        <option value="">Choose a combo</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comboTickets">Number of Combo Sets *</label>
+                    <input type="number" id="comboTickets" min="1" max="10" value="1" class="number-input" onchange="updateTotalPrice()">
+                    <div class="ticket-price-info" id="comboPriceInfo">
+                        Price per combo: €0.00
+                    </div>
+                    <div class="total-price" id="comboTotalPrice">
+                        Total: €0.00
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" required placeholder="Enter your email address">
+                <div id="emailError" class="error">Please enter a valid email address</div>                
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <div class="phone-input-group">
+                    <select id="countryCode" class="country-code" required>
+                        <option value="+49">+49</option>
+                        <option value="+91">+91</option>
+                        <option value="+43">+43</option>
+                        <option value="+31">+31</option>
+                        <option value="+41">+41</option>
+                        <option value="+39">+39</option>
+                        <option value="+1">+1</option>
+                    </select>
+                    <input type="tel" id="phone" class="phone-number" required 
+                    pattern="[0-9]+" 
+                    oninput="validatePhoneInput(this)"
+                    onblur="validatePhoneNumber()"
+                    placeholder="Enter your phone number">
+                </div>
+                <div id="phoneError" class="error">
+                    Please enter a valid phone number
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="payment">Payment Method *</label>
+                <select id="payment" required onchange="updatePaymentField()">
+                   <option value="">Choose payment method</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="iban">IBAN Transfer</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+              <div class="consent-box">
+                <p class="consent-title">
+                  <span class="consent-icon">🔒</span> Data Protection Notice
+                </p>
+                <p class="consent-text">
+                  Your personal data (e.g., name, contact information) will be used
+                  solely for organizing and managing this event. It will not be shared,
+                  published, or used for any other purpose, and will be deleted after the event.  
+                  By registering, you consent to this data processing.  
+                  You may withdraw your consent at any time by contacting us.
+                </p>
+              </div>
+            
+              <label class="checkbox-label">
+                <input type="checkbox" id="dataConsent" required>
+                <strong>I agree to the collection and use of my data as described above.</strong>
+              </label>
+            </div>
+        <button type="submit">Book Now</button>
+        </form>
+        <div id="loading" class="loading">Processing your booking...</div>
+    </div>
+    
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4k78Rzj3rwpdvdRg3NeBesdFwahjWvykPGHkptRdhNYKizf56N5bjLL342WWo_d8Y/exec';
+        const PAYPAL_LINK = 'https://paypal.me/KNaragoni?country.x=DE&locale.x=en_US';
+        
+        const BANK_DETAILS = {
+            name: 'Rajkumar Yelugam',
+            iban: 'BE79 9675 9446 1533',
+            bic: 'TRWIBEB1XXX',
+			bankName: 'Wise, Rue du Trone 100, 3rd loor, Brussels, 1050, Belgium'
+        };
+        
+        const SHOW_DATES = [
+            {
+                date: '2026-01-08',
+                label: 'Thursday, January 08, 2026',
+                shows: [
+                    { value: 'rajasaab-premiere', label: 'RajaSaab - Premiere (21:45 Uhr)', price: 20.00, movie: 'RajaSaab' }
+                ]
+            },
+            {
+                date: '2026-01-10',
+                label: 'Saturday, January 10, 2026',
+                shows: [
+                    { value: 'rajasaab-weekend', label: 'RajaSaab - Weekend Show (11:00 Uhr)', price: 18.00, movie: 'RajaSaab' }
+                ]
+            },
+            {
+                date: '2026-01-11',
+                label: 'Sunday, January 11, 2026',
+                shows: [
+                    { value: 'msvg-premiere', label: 'Mana Shankara Varaprasad Gaaru - Premiere (20:00 Uhr)', price: 15.00, movie: 'Mana Shankara Varaprasad Gaaru' }
+                ]
+            }
+        ];
+        
+        const COMBO_OFFERS = [
+            {
+                value: 'combo1',
+                label: 'RajaSaab (Premiere) + Mana Shankara Varaprasad Gaaru (Premiere)',
+                price: 30.00,
+                description: '2 Movies for €30',
+                shows: ['rajasaab-premiere', 'msvg-premiere']
+            },
+            {
+                value: 'combo2',
+                label: 'RajaSaab (Weekend) + Mana Shankara Varaprasad Gaaru (Premiere)',
+                price: 28.00,
+                description: '2 Movies for €28',
+                shows: ['rajasaab-weekend', 'msvg-premiere']
+            }
+        ];
+        
+        function selectBookingType(type) {
+            document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.getElementById(type).checked = true;
+            updateBookingType();
+        }
+        
+        function updateBookingType() {
+            const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+            const singleSection = document.getElementById('singleMovieSection');
+            const comboSection = document.getElementById('comboSection');
+            
+            if (bookingType === 'single') {
+                singleSection.style.display = 'block';
+                comboSection.style.display = 'none';
+                document.getElementById('date').required = true;
+                document.getElementById('show').required = true;
+                document.getElementById('tickets').required = true;
+                document.getElementById('comboSelect').required = false;
+                document.getElementById('comboTickets').required = false;
+            } else {
+                singleSection.style.display = 'none';
+                comboSection.style.display = 'block';
+                document.getElementById('date').required = false;
+                document.getElementById('show').required = false;
+                document.getElementById('tickets').required = false;
+                document.getElementById('comboSelect').required = true;
+                document.getElementById('comboTickets').required = true;
+                populateComboOffers();
+            }
+            updateTotalPrice();
+        }
+        
+        function populateComboOffers() {
+            const comboSelect = document.getElementById('comboSelect');
+            comboSelect.innerHTML = '<option value="">Choose a combo</option>';
+            COMBO_OFFERS.forEach(combo => {
+                comboSelect.innerHTML += `<option value="${combo.value}" data-price="${combo.price}">${combo.label} - €${combo.price.toFixed(2)}</option>`;
+            });
+        }
+        
+        function getTicketPrice() {
+            const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+            
+            if (bookingType === 'combo') {
+                const comboSelect = document.getElementById('comboSelect');
+                const selectedOption = comboSelect.options[comboSelect.selectedIndex];
+                return selectedOption ? parseFloat(selectedOption.dataset.price) || 0 : 0;
+            } else {
+                const showSelect = document.getElementById('show');
+                const selectedShow = showSelect.value;
+                
+                for (let dateObj of SHOW_DATES) {
+                    const show = dateObj.shows.find(s => s.value === selectedShow);
+                    if (show) return show.price;
+                }
+                return 0;
+            }
+        }
+        
+        function updateTotalPrice() {
+            const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+            const price = getTicketPrice();
+            
+            if (bookingType === 'combo') {
+                const tickets = parseInt(document.getElementById('comboTickets').value) || 1;
+                const totalPrice = (tickets * price).toFixed(2);
+                document.getElementById('comboPriceInfo').textContent = `Price per combo: €${price.toFixed(2)}`;
+                document.getElementById('comboTotalPrice').textContent = `Total: €${totalPrice}`;
+            } else {
+                const tickets = parseInt(document.getElementById('tickets').value) || 1;
+                const totalPrice = (tickets * price).toFixed(2);
+                document.getElementById('pricePerTicket').textContent = `Price per ticket: €${price.toFixed(2)}`;
+                document.getElementById('totalPrice').textContent = `Total: €${totalPrice}`;
+            }
+        }
+        
+        function updateAvailableDates() {
+            const dateSelect = document.getElementById('date');
+            dateSelect.innerHTML = '<option value="">Choose a date</option>';
+            
+            SHOW_DATES.forEach(showDate => {
+                if (new Date(showDate.date) >= new Date().setHours(0, 0, 0, 0)) {
+                    dateSelect.innerHTML += `<option value="${showDate.date}">${showDate.label}</option>`;
+                }
+            });
+        }
+        
+        function updateShowTimes() {
+            const dateSelect = document.getElementById('date');
+            const showSelect = document.getElementById('show');
+            const selectedDate = SHOW_DATES.find(sd => sd.date === dateSelect.value);
+        
+            showSelect.innerHTML = `<option value="">Choose a show</option>`;
+        
+            if (selectedDate) {
+                selectedDate.shows.forEach(show => {
+                    showSelect.innerHTML += `<option value="${show.value}" data-price="${show.price}">${show.label} - €${show.price.toFixed(2)}</option>`;
+                });
+            }
+        }
+        
+        let currentPaymentMethod = '';
+        
+        document.getElementById('date').addEventListener('change', updateShowTimes);
+        document.getElementById('show').addEventListener('change', updateTotalPrice);
+        document.getElementById('comboSelect').addEventListener('change', updateTotalPrice);
+      
+        function showPaymentModal(paymentMethod) {
+            const modal = document.getElementById('paymentModal');
+            const content = document.getElementById('paymentModalContent');
+            const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+            const price = getTicketPrice();
+            let tickets, totalPrice, bookingDetails;
+            
+            if (bookingType === 'combo') {
+                tickets = parseInt(document.getElementById('comboTickets').value);
+                totalPrice = (tickets * price).toFixed(2);
+                const comboSelect = document.getElementById('comboSelect');
+                const selectedCombo = comboSelect.options[comboSelect.selectedIndex].text;
+                bookingDetails = `<p><strong>Combo:</strong> ${selectedCombo}</p><p><strong>Number of Sets:</strong> ${tickets}</p>`;
+            } else {
+                tickets = parseInt(document.getElementById('tickets').value);
+                totalPrice = (tickets * price).toFixed(2);
+                const showSelect = document.getElementById('show');
+                const selectedShow = showSelect.options[showSelect.selectedIndex].text;
+                bookingDetails = `<p><strong>Show:</strong> ${selectedShow}</p><p><strong>Number of Tickets:</strong> ${tickets}</p>`;
+            }
+            
+            currentPaymentMethod = paymentMethod;
+            
+            if (paymentMethod === 'paypal') {
+                content.innerHTML = `
+                    <p>You will be redirected to PayPal for payment. Please select friends & family option while payment. Would you like to proceed?</p>
+                    <div class="payment-info">
+                        <h3>Payment Details:</h3>
+                        ${bookingDetails}
+                        <p><strong>Amount: €${totalPrice}</strong></p>
+                        <p><strong>PayPal ID: ksdheeraj143@gmail.com</strong></p>
+                    </div>
+                `;
+            } else if (paymentMethod === 'iban') {
+                content.innerHTML = `
+                    <p>Please use the following bank details for the transfer:</p>
+                    <div class="bank-details">
+                        <p><strong>Name:</strong> ${BANK_DETAILS.name}</p>
+                        <p><strong>IBAN:</strong> ${BANK_DETAILS.iban}</p>
+                        <p><strong>BIC:</strong> ${BANK_DETAILS.bic}</p>
+						<p><strong>BIC:</strong> ${BANK_DETAILS.bankName}</p>
+                        ${bookingDetails}
+                        <p><strong>Amount: €${totalPrice}</strong></p>
+                    </div>
+                    <p style="color:red;">Please make sure to include your <strong>full name in the transfer reference</strong>.</p>
+                    <p>Click "Proceed" to confirm that you will make the transfer.</p>
+                `;
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        function cancelPayment() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+        
+        function proceedWithPayment() {
+            if (currentPaymentMethod === 'paypal') {
+                window.open(PAYPAL_LINK, '_blank');
+            }
+            submitBooking();
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+        
+        function validatePhoneInput(input) {
+            input.value = input.value.replace(/\D/g, '');
+            validatePhoneNumber();
+        }
+        
+        function validatePhoneNumber() {
+            const countryCode = document.getElementById('countryCode').value;
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            const phoneNumber = phoneInput.value.replace(/\D/g, '');
+            
+            let isValid = false;
+            let errorMessage = '';
+            
+            if (countryCode === '+49') {
+                if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+                    errorMessage = 'German phone numbers should be 10-11 digits long';
+                } else {
+                    isValid = true;
+                }
+            } else if (countryCode === '+43') {
+                if (phoneNumber.length < 6 || phoneNumber.length > 12) {
+                    errorMessage = 'Austria phone numbers should be 6-12 digits long';
+                } else {
+                    isValid = true;
+                }
+            } else if (countryCode === '+41') {
+                if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+                    errorMessage = 'Switzerland phone numbers should be 10-11 digits long';
+                } else {
+                    isValid = true;
+                }
+            } else if (countryCode === '+31') {
+                if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+                    errorMessage = 'Netherland phone numbers should be 10-11 digits long';
+                } else {
+                    isValid = true;
+                }
+            } else if (countryCode === '+39') {
+                if (phoneNumber.length < 6 || phoneNumber.length > 12) {
+                    errorMessage = 'Italy phone numbers should be 6-12 digits long';
+                } else {
+                    isValid = true;
+                }
+            } else if (countryCode === '+1') {
+                if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+                    errorMessage = 'USA phone numbers should be 10-11 digits long';
+                } else {
+                    isValid = true;
+                }
+            } else if (countryCode === '+91') {
+                if (phoneNumber.length !== 10) {
+                    errorMessage = 'Indian phone numbers should be 10 digits';
+                } else {
+                    isValid = true;
+                }
+            }
+            
+            phoneInput.classList.toggle('invalid', !isValid);
+            phoneError.style.display = isValid ? 'none' : 'block';
+            phoneError.textContent = errorMessage;
+            
+            return isValid;
+        }
+
+        function validateEmail() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailValue = emailInput.value.trim();
+            const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+            emailInput.classList.toggle('invalid', !isValid);
+            emailError.style.display = isValid ? 'none' : 'block';
+            
+            return isValid;
+        }
+        
+        function validateForm() {
+            const name = document.getElementById('name').value;
+            if (name.trim() === '') {
+                alert('Please enter your name');
+                return false;
+            }
+            if (!validatePhoneNumber()) {
+                return false;
+            }
+            if (!validateEmail()) {
+                alert('Please enter a valid email address');
+                return false;
+            }
+            
+            const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+            
+            if (bookingType === 'single') {
+                const tickets = parseInt(document.getElementById('tickets').value);
+                if (isNaN(tickets) || tickets < 1 || tickets > 10) {
+                    alert('Please enter a number of tickets between 1 and 10');
+                    return false;
+                }
+            } else {
+                const comboTickets = parseInt(document.getElementById('comboTickets').value);
+                if (isNaN(comboTickets) || comboTickets < 1 || comboTickets > 10) {
+                    alert('Please enter a number of combo sets between 1 and 10');
+                    return false;
+                }
+                if (!document.getElementById('comboSelect').value) {
+                    alert('Please select a combo offer');
+                    return false;
+                }
+            }
+            
+            if (!document.getElementById('dataConsent').checked) {
+                alert('You must agree to the data processing consent to proceed with booking');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return false;
+            }
+            
+            const paymentMethod = document.getElementById('payment').value;
+            
+            if (paymentMethod === 'paypal' || paymentMethod === 'iban') {
+                showPaymentModal(paymentMethod);
+            } else {
+                submitBooking();
+            }
+            
+            return false;
+        }
+        
+        async function submitBooking() {
+            document.getElementById('loading').style.display = 'block';
+            
+            const countryCode = document.getElementById('countryCode').value;
+            const phoneNumber = document.getElementById('phone').value;
+            const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+            const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+            const price = getTicketPrice();
+            
+            let formData;
+            
+            if (bookingType === 'combo') {
+                const tickets = document.getElementById('comboTickets').value;
+                const totalPrice = (tickets * price).toFixed(2);
+                const comboSelect = document.getElementById('comboSelect');
+                const selectedCombo = COMBO_OFFERS.find(c => c.value === comboSelect.value);
+
+                // Get dates for combo shows
+                let comboDates = [];
+                selectedCombo.shows.forEach(showValue => {
+                    for (let dateObj of SHOW_DATES) {
+                        const show = dateObj.shows.find(s => s.value === showValue);
+                        if (show) {
+                            comboDates.push(dateObj.date);
+                            break;
+                        }
+                    }
+                });
+                
+                formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: fullPhoneNumber,
+                    bookingType: 'combo',
+                    combo: selectedCombo.label,
+                    show: selectedCombo.shows.join(', '),
+                    date: comboDates.join(', '),
+                    paymentMethod: document.getElementById('payment').value,
+                    ticketQuantity: tickets,
+                    totalPrice: totalPrice,
+                    sendEmail: true
+                };
+            } else {
+                const tickets = document.getElementById('tickets').value;
+                const totalPrice = (tickets * price).toFixed(2);
+                const selectedShow = document.getElementById('show').value;
+                const selectedDateValue = document.getElementById('date').value;
+                
+                let showTime = '';
+                let showDateText = '';
+                let movieName = '';
+                const selectedDateObj = SHOW_DATES.find(sd => sd.date === selectedDateValue);
+                
+                if (selectedDateObj) {
+                    const show = selectedDateObj.shows.find(s => s.value === selectedShow);
+                    if (show) {
+                        showTime = show.label;
+                        movieName = show.movie;
+                    }
+                    showDateText = selectedDateObj.label;
+                }
+
+                formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: fullPhoneNumber,
+                    bookingType: 'single',
+                    movie: movieName,
+                    show: selectedShow,
+                    showTime: showTime,
+                    date: selectedDateValue,
+                    dateText: showDateText,
+                    paymentMethod: document.getElementById('payment').value,
+                    ticketQuantity: tickets,
+                    totalPrice: totalPrice,
+                    sendEmail: true
+                };
+            }
+        
+            try {
+                const response = await fetch(`${SCRIPT_URL}?v=${new Date().getTime()}`, {            
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(formData)
+                });
+        
+                if (response.type === 'opaque') {
+                    alert('Booking successful! Thank you for your reservation. You will receive a confirmation email shortly!!!');
+                    document.getElementById('bookingForm').reset();
+                    updateBookingType();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Unable to process booking. Please try again later.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            const content = document.querySelector('.modal-content');
+            if (event.target === modal && !content.contains(event.target)) {
+                modal.style.display = 'none';
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAvailableDates();
+            updateTotalPrice();
+            document.getElementById('email').addEventListener('input', validateEmail);
+            document.querySelectorAll('.radio-option')[0].classList.add('selected');
+        });
+        
+    </script>
+</body>
+</html>
