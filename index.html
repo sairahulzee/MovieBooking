@@ -433,7 +433,7 @@
                 date: '2026-01-10',
                 label: 'Saturday, January 10, 2026',
                 shows: [
-                    { value: 'RajaSaab - Weekend Show (19:00 Uhr) - Cinemaxx Potsdamer Platz', label: 'RajaSaab - Weekend Show (19:00 Uhr) - Cinemaxx Potsdamer Platz', price: 20.00, movie: 'RajaSaab' }
+                    { value: 'RajaSaab - Weekend Show (19:00 Uhr) - Cinemaxx Potsdamer Platz', label: 'RajaSaab - Weekend Show (19:00 Uhr) - Cinemaxx Potsdamer Platz', price: 25.00, movie: 'RajaSaab' }
                 ]
             },
             {
@@ -446,16 +446,26 @@
         ];
         
         const COMBO_OFFERS = [
-            {
+			{
+				 dates: [2026-01-09, 2026-01-11],
                  value: 'combo1',
-                 label: 'RajaSaab + Utsav Tollywood DJ Night',
+                 label: 'RajaSaab - 09th Jan + Utsav Tollywood DJ Night - 11th Jan',
+                 price: 35.00,
+                 description: 'Movie + Tollywood DJ Night €35',
+                 shows: ['RajaSaab', 'Tollywood DJ Night']
+             },
+            {
+				 dates: [2026-01-10, 2026-01-11],
+                 value: 'combo1',
+                 label: 'RajaSaab - 10th Jan + Utsav Tollywood DJ Night - 11th Jan',
                  price: 35.00,
                  description: 'Movie + Tollywood DJ Night €35',
                  shows: ['RajaSaab', 'Tollywood DJ Night']
              },
              {
+				 dates:: [2026-01-11, 2026-01-11],
                  value: 'combo2',
-                 label: 'RajaSaab + Utsav Tollywood DJ Night',
+                 label: 'RajaSaab - 11th Jan + Utsav Tollywood DJ Night - 11th Jan',
                  price: 30.00,
                  description: 'Movie + Tollywood DJ Night €30',
                  shows: ['RajaSaab', 'Tollywood DJ Night']
@@ -892,6 +902,7 @@
     </script>
 </body>
 </html>
+
 
 
 
