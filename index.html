@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -275,7 +276,7 @@
             <h2>Book Via WhatsApp - +49 15565440387</h2>
         </div>
         
-        <img src="https://raw.githubusercontent.com/Ksdheeraj9/SD-Movie-Exhibitors/refs/heads/main/poster.jpeg" alt="Movie Poster" class="poster">
+        <img src="https://raw.githubusercontent.com/prathamark25/Utsav_Entertainments_Booking/refs/heads/main/poster.jpg" alt="Movie Poster" class="poster">
         
         <form id="bookingForm" onsubmit="return handleSubmit(event)">
             <!-- Booking Type Selection -->
@@ -286,10 +287,10 @@
                         <input type="radio" id="single" name="bookingType" value="single" checked onchange="updateBookingType()">
                         <label for="single">Single Movie Ticket</label>
                     </div>
-                    <!-- <div class="radio-option" onclick="selectBookingType('combo', this)">
+                    <div class="radio-option" onclick="selectBookingType('combo', this)">
                         <input type="radio" id="combo" name="bookingType" value="combo" onchange="updateBookingType()">
                         <label for="combo">Combo Offer (2 Movies)</label>
-                    </div> -->
+                    </div> 
                 </div>
             </div>
             
@@ -447,17 +448,17 @@
         const COMBO_OFFERS = [
             {
                  value: 'combo1',
-                 label: 'RajaSaab (Premiere) + Mana Shankara Varaprasad Gaaru (Premiere)',
+                 label: 'RajaSaab + Utsav Tollywood DJ Night',
                  price: 30.00,
-                 description: '2 Movies for €30',
-                 shows: ['rajasaab-premiere', 'msvg-premiere']
+                 description: 'Movie + Tollywood DJ Night €35',
+                 shows: ['RajaSaab', 'Tollywood DJ Night']
              },
              {
                  value: 'combo2',
-                 label: 'RajaSaab (Weekend) + Mana Shankara Varaprasad Gaaru (Premiere)',
+                 label: 'RajaSaab + Utsav Tollywood DJ Night',
                  price: 28.00,
-                 description: '2 Movies for €28',
-                 shows: ['rajasaab-weekend', 'msvg-premiere']
+                 description: 'Movie + Tollywood DJ Night €28',
+                 shows: ['RajaSaab', 'Tollywood DJ Night']
              }
         ];
         
@@ -891,5 +892,6 @@
     </script>
 </body>
 </html>
+
 
 
