@@ -282,11 +282,11 @@
             <div class="form-group show-type-selector">
                 <label>Booking Type *</label>
                 <div class="radio-group">
-                    <div class="radio-option" onclick="selectBookingType('single')">
+                    <div class="radio-option" onclick="selectBookingType('single', this)">
                         <input type="radio" id="single" name="bookingType" value="single" checked onchange="updateBookingType()">
                         <label for="single">Single Movie Ticket</label>
                     </div>
-                    <div class="radio-option" onclick="selectBookingType('combo')">
+                    <div class="radio-option" onclick="selectBookingType('combo', this)">
                         <input type="radio" id="combo" name="bookingType" value="combo" onchange="updateBookingType()">
                         <label for="combo">Combo Offer (2 Movies)</label>
                     </div>
@@ -410,7 +410,7 @@
     </div>
     
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4k78Rzj3rwpdvdRg3NeBesdFwahjWvykPGHkptRdhNYKizf56N5bjLL342WWo_d8Y/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxm48NPnvmCPh0Kitoa01vtf4jP9VcOEBLpb6rkWMfPYGdlrLX4TquLg8TtfB0WRBI/exec';
         const PAYPAL_LINK = 'https://paypal.me/KNaragoni?country.x=DE&locale.x=en_US';
         
         const BANK_DETAILS = {
@@ -422,8 +422,8 @@
         
         const SHOW_DATES = [
             {
-                date: '2026-01-08',
-                label: 'Thursday, January 08, 2026',
+                date: '2026-01-09',
+                label: 'Friday, January 09, 2026',
                 shows: [
                     { value: 'rajasaab-premiere', label: 'RajaSaab - Premiere (21:45 Uhr)', price: 20.00, movie: 'RajaSaab' }
                 ]
@@ -445,28 +445,28 @@
         ];
         
         const COMBO_OFFERS = [
-            {
-                value: 'combo1',
-                label: 'RajaSaab (Premiere) + Mana Shankara Varaprasad Gaaru (Premiere)',
-                price: 30.00,
-                description: '2 Movies for €30',
-                shows: ['rajasaab-premiere', 'msvg-premiere']
-            },
-            {
-                value: 'combo2',
-                label: 'RajaSaab (Weekend) + Mana Shankara Varaprasad Gaaru (Premiere)',
-                price: 28.00,
-                description: '2 Movies for €28',
-                shows: ['rajasaab-weekend', 'msvg-premiere']
-            }
+            // {
+            //     value: 'combo1',
+            //     label: 'RajaSaab (Premiere) + Mana Shankara Varaprasad Gaaru (Premiere)',
+            //     price: 30.00,
+            //     description: '2 Movies for €30',
+            //     shows: ['rajasaab-premiere', 'msvg-premiere']
+            // },
+            // {
+            //     value: 'combo2',
+            //     label: 'RajaSaab (Weekend) + Mana Shankara Varaprasad Gaaru (Premiere)',
+            //     price: 28.00,
+            //     description: '2 Movies for €28',
+            //     shows: ['rajasaab-weekend', 'msvg-premiere']
+            // }
         ];
         
-        function selectBookingType(type) {
-            document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            document.getElementById(type).checked = true;
-            updateBookingType();
-        }
+        function selectBookingType(type, element) {
+			document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+			element.classList.add('selected');
+			document.getElementById(type).checked = true;
+			updateBookingType();
+		}
         
         function updateBookingType() {
             const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
@@ -599,7 +599,7 @@
                         <h3>Payment Details:</h3>
                         ${bookingDetails}
                         <p><strong>Amount: €${totalPrice}</strong></p>
-                        <p><strong>PayPal ID: ksdheeraj143@gmail.com</strong></p>
+                        <p><strong>PayPal ID: Knaragoni@gmail.com</strong></p>
                     </div>
                 `;
             } else if (paymentMethod === 'iban') {
@@ -609,7 +609,7 @@
                         <p><strong>Name:</strong> ${BANK_DETAILS.name}</p>
                         <p><strong>IBAN:</strong> ${BANK_DETAILS.iban}</p>
                         <p><strong>BIC:</strong> ${BANK_DETAILS.bic}</p>
-						<p><strong>BIC:</strong> ${BANK_DETAILS.bankName}</p>
+						<p><strong>Bank Address:</strong> ${BANK_DETAILS.bankName}</p>
                         ${bookingDetails}
                         <p><strong>Amount: €${totalPrice}</strong></p>
                     </div>
@@ -804,6 +804,7 @@
                     phone: fullPhoneNumber,
                     bookingType: 'combo',
                     combo: selectedCombo.label,
+					movie:'',
                     show: selectedCombo.shows.join(', '),
                     date: comboDates.join(', '),
                     paymentMethod: document.getElementById('payment').value,
@@ -836,6 +837,7 @@
                     email: document.getElementById('email').value,
                     phone: fullPhoneNumber,
                     bookingType: 'single',
+					combo: '',
                     movie: movieName,
                     show: selectedShow,
                     showTime: showTime,
