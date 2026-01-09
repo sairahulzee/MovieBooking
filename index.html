@@ -287,10 +287,10 @@
                         <input type="radio" id="single" name="bookingType" value="single" checked onchange="updateBookingType()">
                         <label for="single">Single Movie Ticket</label>
                     </div>
-                    <div class="radio-option" onclick="selectBookingType('combo', this)">
+                    <!-- <div class="radio-option" onclick="selectBookingType('combo', this)">
                         <input type="radio" id="combo" name="bookingType" value="combo" onchange="updateBookingType()">
-                        <label for="combo">Combo Offer (Movie + DJ Night)</label>
-                    </div> 
+                        <label for="combo">Combo Offer (2 Movies)</label>
+                    </div> -->
                 </div>
             </div>
             
@@ -381,7 +381,7 @@
                 <label for="payment">Payment Method *</label>
                 <select id="payment" required onchange="updatePaymentField()">
                    <option value="">Choose payment method</option>
-                    <option value="paypal">PayPal</option>
+                    <option value="desipass">Desipass</option>
                     <option value="iban">IBAN Transfer</option>
                 </select>
             </div>
@@ -411,14 +411,15 @@
     </div>
     
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxm48NPnvmCPh0Kitoa01vtf4jP9VcOEBLpb6rkWMfPYGdlrLX4TquLg8TtfB0WRBI/exec';
-        const PAYPAL_LINK = 'https://paypal.me/KNaragoni?country.x=DE&locale.x=en_US';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwnGisHU3wS3HqxYGaSt_aPqPijpYW_H1br0Cr1jNmQxkHeakd9qLrBtbnWYCqqWjmP/exec';
+        const PAYPAL_LINK = 'https://paypal.me/HarshethaMKM?country.x=DE&locale.x=en_US';
+		const DESIPASS_LINK = 'https://www.desipass.com//events/events-details?eventId=01KEHAZ5MAD1QQFVF8APPB4AD4';
         
         const BANK_DETAILS = {
             name: 'Rajkumar Yelugam',
-            iban: 'BE79 9675 9446 1533',
-            bic: 'TRWIBEB1XXX',
-			bankName: 'Wise, Rue du Trone 100, 3rd loor, Brussels, 1050, Belgium'
+            iban: 'DE37 1204 0000 0023 6711 00',
+            bic: 'COBADEFFXXX',
+			bankName: 'Commerz Bank'
         };
         
         const SHOW_DATES = [
@@ -446,29 +447,19 @@
         ];
         
         const COMBO_OFFERS = [
-			{
-				 dates: [2026-01-09, 2026-01-11],
-                 value: 'combo1',
-                 label: 'RajaSaab - 09th Jan + Utsav Tollywood DJ Night - 11th Jan',
-                 price: 35.00,
-                 description: 'Movie + Tollywood DJ Night €35',
-                 shows: ['RajaSaab', 'Tollywood DJ Night']
-             },
             {
-				 dates: [2026-01-10, 2026-01-11],
                  value: 'combo1',
-                 label: 'RajaSaab - 10th Jan + Utsav Tollywood DJ Night - 11th Jan',
-                 price: 35.00,
-                 description: 'Movie + Tollywood DJ Night €35',
-                 shows: ['RajaSaab', 'Tollywood DJ Night']
+                 label: 'RajaSaab (Premiere) + Mana Shankara Varaprasad Gaaru (Premiere)',
+                 price: 30.00,
+                 description: '2 Movies for €30',
+                 shows: ['rajasaab-premiere', 'msvg-premiere']
              },
              {
-				 dates:: [2026-01-11, 2026-01-11],
                  value: 'combo2',
-                 label: 'RajaSaab - 11th Jan + Utsav Tollywood DJ Night - 11th Jan',
-                 price: 30.00,
-                 description: 'Movie + Tollywood DJ Night €30',
-                 shows: ['RajaSaab', 'Tollywood DJ Night']
+                 label: 'RajaSaab (Weekend) + Mana Shankara Varaprasad Gaaru (Premiere)',
+                 price: 28.00,
+                 description: '2 Movies for €28',
+                 shows: ['rajasaab-weekend', 'msvg-premiere']
              }
         ];
         
@@ -610,7 +601,7 @@
                         <h3>Payment Details:</h3>
                         ${bookingDetails}
                         <p><strong>Amount: €${totalPrice}</strong></p>
-                        <p><strong>PayPal ID: Knaragoni@gmail.com</strong></p>
+                        <p><strong>PayPal ID: @gmail.com</strong></p>
                     </div>
                 `;
             } else if (paymentMethod === 'iban') {
@@ -627,6 +618,15 @@
                     <p style="color:red;">Please make sure to include your <strong>full name in the transfer reference</strong>.</p>
                     <p>Click "Proceed" to confirm that you will make the transfer.</p>
                 `;
+            } else if (paymentMethod === 'desipass') {
+                content.innerHTML = `
+                    <p>You will be redirected to Desipass for payment. Would you like to proceed?</p>
+                    <div class="payment-info">
+                        <h3>Payment Details:</h3>
+                        ${bookingDetails}
+                        <p><strong>Amount: €${totalPrice}</strong></p>
+                    </div>
+                `;
             }
             
             modal.style.display = 'block';
@@ -639,6 +639,8 @@
         function proceedWithPayment() {
             if (currentPaymentMethod === 'paypal') {
                 window.open(PAYPAL_LINK, '_blank');
+            } else if (currentPaymentMethod === 'desipass') {
+                window.open(DESIPASS_LINK, '_blank');
             }
             submitBooking();
             document.getElementById('paymentModal').style.display = 'none';
@@ -771,7 +773,7 @@
             
             const paymentMethod = document.getElementById('payment').value;
             
-            if (paymentMethod === 'paypal' || paymentMethod === 'iban') {
+            if (paymentMethod === 'paypal' || paymentMethod === 'iban' || paymentMethod === 'desipass') {
                 showPaymentModal(paymentMethod);
             } else {
                 submitBooking();
@@ -902,8 +904,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
